@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+COMPOSE_FILE=".devcontainer/compose.yaml"
+docker compose -f "$COMPOSE_FILE" run --rm rails-app bin/setup --skip-server
+docker compose -f "$COMPOSE_FILE" run --rm rails-app bin/rails db:seed

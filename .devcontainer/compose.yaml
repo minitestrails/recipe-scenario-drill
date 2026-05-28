@@ -1,0 +1,31 @@
+name: "recipe_scenario_drill"
+
+services:
+  rails-app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+
+    volumes:
+    - ..:/workspaces/recipe-scenario-drill:cached
+
+    working_dir: /workspaces/recipe-scenario-drill
+
+    ports:
+    - "3000:3000"
+
+    command: bin/rails server -b 0.0.0.0
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    depends_on:
+    - selenium
+
+  selenium:
+    image: selenium/standalone-chromium
+    restart: unless-stopped
+
+  
