@@ -1,0 +1,20 @@
+<% content_for :title, "Recipes" %>
+
+<h1>Recipes</h1>
+
+<div id="recipes">
+  <% if @recipes.any? %>
+    <% @recipes.each do |recipe| %>
+      <article>
+        <h2><%= link_to recipe.title, recipe %></h2>
+        <% if recipe.description.present? %>
+          <p><%= truncate(recipe.description, length: 120) %></p>
+        <% end %>
+      </article>
+    <% end %>
+  <% else %>
+    <p>No recipes yet.</p>
+  <% end %>
+</div>
+
+<p><%= link_to "New recipe", new_recipe_path %></p>

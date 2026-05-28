@@ -1,0 +1,9 @@
+Your friend shared a recipe with you.
+
+<%= @recipe.title %>
+
+<% if @recipe.description.present? %>
+<%= @recipe.description %>
+
+<% end %>
+View recipe: <%= @recipe_url %>

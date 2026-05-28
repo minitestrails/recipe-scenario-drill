@@ -1,0 +1,78 @@
+<%= form_with(model: recipe) do |form| %>
+  <% if recipe.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+      <ul>
+        <% recipe.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title %>
+    <%= form.text_field :title %>
+    <% recipe.errors.full_messages_for(:title).each do |message| %>
+      <div class="field-error"><%= message %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :description %>
+    <%= form.textarea :description %>
+  </div>
+
+  <div>
+    <%= form.label :servings %>
+    <%= form.number_field :servings, min: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :prep_time, "Prep time (minutes)" %>
+    <%= form.number_field :prep_time, min: 1 %>
+    <% recipe.errors.full_messages_for(:prep_time).each do |message| %>
+      <div class="field-error"><%= message %></div>
+    <% end %>
+  </div>
+
+  <fieldset data-controller="nested-form">
+    <legend>Ingredients</legend>
+
+    <template data-nested-form-target="template">
+      <%= form.fields_for :ingredients, Ingredient.new, child_index: "NEW_RECORD" do |ingredient_fields| %>
+        <%= render "ingredient_fields", form: ingredient_fields %>
+      <% end %>
+    </template>
+
+    <div data-nested-form-target="container">
+      <%= form.fields_for :ingredients do |ingredient_fields| %>
+        <%= render "ingredient_fields", form: ingredient_fields %>
+      <% end %>
+    </div>
+
+    <button type="button" data-action="nested-form#add">Add ingredient</button>
+  </fieldset>
+
+  <fieldset data-controller="nested-form">
+    <legend>Steps</legend>
+
+    <template data-nested-form-target="template">
+      <%= form.fields_for :steps, Step.new, child_index: "NEW_RECORD" do |step_fields| %>
+        <%= render "step_fields", form: step_fields %>
+      <% end %>
+    </template>
+
+    <div data-nested-form-target="container">
+      <%= form.fields_for :steps do |step_fields| %>
+        <%= render "step_fields", form: step_fields %>
+      <% end %>
+    </div>
+
+    <button type="button" data-action="nested-form#add">Add step</button>
+  </fieldset>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

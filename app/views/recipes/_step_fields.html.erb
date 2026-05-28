@@ -1,0 +1,16 @@
+<div class="nested-fields">
+  <%= form.hidden_field :_destroy, value: false, data: { nested_form_destroy: true } %>
+
+  <div>
+    <%= form.label :position, "Order" %>
+    <%= form.number_field :position, min: 1 %>
+  </div>
+
+  <div>
+    <%= form.label :instruction %>
+    <%= form.textarea :instruction %>
+    <% form.object.errors.full_messages_for(:instruction).each do |message| %>
+      <div class="field-error"><%= message %></div>
+    <% end %>
+  </div>
+</div>

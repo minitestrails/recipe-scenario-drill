@@ -1,0 +1,9 @@
+<p>Your friend shared a recipe with you.</p>
+
+<h1><%= @recipe.title %></h1>
+
+<% if @recipe.description.present? %>
+  <p><%= @recipe.description %></p>
+<% end %>
+
+<p><%= link_to "View recipe", @recipe_url %></p>

@@ -8,3 +8,18 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.field-error,
+.flash.alert {
+  color: #b00020;
+}
+
+.flash.notice {
+  color: #0d6b0d;
+}
+
+.nested-fields {
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
