@@ -1,24 +1,26 @@
 <div class="nested-fields">
   <%= form.hidden_field :_destroy, value: false, data: { nested_form_destroy: true } %>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-    <% form.object.errors.full_messages_for(:name).each do |message| %>
-      <div class="field-error"><%= message %></div>
-    <% end %>
-  </div>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <div class="sm:col-span-1">
+      <%= form.label :name, class: "form-label" %>
+      <%= form.text_field :name, class: "form-input" %>
+      <% form.object.errors.full_messages_for(:name).each do |message| %>
+        <div class="field-error"><%= message %></div>
+      <% end %>
+    </div>
 
-  <div>
-    <%= form.label :quantity %>
-    <%= form.text_field :quantity %>
-    <% form.object.errors.full_messages_for(:quantity).each do |message| %>
-      <div class="field-error"><%= message %></div>
-    <% end %>
-  </div>
+    <div>
+      <%= form.label :quantity, class: "form-label" %>
+      <%= form.text_field :quantity, class: "form-input" %>
+      <% form.object.errors.full_messages_for(:quantity).each do |message| %>
+        <div class="field-error"><%= message %></div>
+      <% end %>
+    </div>
 
-  <div>
-    <%= form.label :unit %>
-    <%= form.text_field :unit %>
+    <div>
+      <%= form.label :unit, class: "form-label" %>
+      <%= form.text_field :unit, placeholder: "cups, tbsp…", class: "form-input" %>
+    </div>
   </div>
 </div>

@@ -55,6 +55,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "foreman"
   gem "letter_opener"
 
   # Use console on exceptions pages [https://github.com/rails/web-console]
@@ -66,3 +67,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "tailwindcss-rails", "~> 4.4"

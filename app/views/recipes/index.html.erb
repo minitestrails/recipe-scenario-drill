@@ -1,20 +1,44 @@
 <% content_for :title, "Recipes" %>
 
-<h1>Recipes</h1>
+<%= page_header "Your recipes", "Browse, cook, and share your collection." do %>
+  <%= link_to "New recipe", new_recipe_path, class: "btn-primary shrink-0" %>
+<% end %>
 
-<div id="recipes">
+<div id="recipes" class="space-y-4">
   <% if @recipes.any? %>
     <% @recipes.each do |recipe| %>
-      <article>
-        <h2><%= link_to recipe.title, recipe %></h2>
-        <% if recipe.description.present? %>
-          <p><%= truncate(recipe.description, length: 120) %></p>
-        <% end %>
+      <article class="card group transition hover:border-brand-200 hover:shadow-md">
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div class="min-w-0 flex-1">
+            <h2 class="text-xl font-semibold text-stone-900">
+              <%= link_to recipe.title, recipe, class: "hover:text-brand-700" %>
+            </h2>
+            <% if recipe.description.present? %>
+              <p class="mt-2 text-stone-600 leading-relaxed"><%= truncate(recipe.description, length: 160) %></p>
+            <% end %>
+            <div class="mt-3 flex flex-wrap gap-3 text-sm text-stone-500">
+              <% if recipe.servings.present? %>
+                <span class="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5">
+                  <span aria-hidden="true">👥</span> <%= recipe.servings %> servings
+                </span>
+              <% end %>
+              <% if recipe.prep_time.present? %>
+                <span class="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5">
+                  <span aria-hidden="true">⏱</span> <%= recipe.prep_time %> min prep
+                </span>
+              <% end %>
+            </div>
+          </div>
+          <%= link_to "View →", recipe, class: "btn-secondary shrink-0 self-start sm:self-center" %>
+        </div>
       </article>
     <% end %>
   <% else %>
-    <p>No recipes yet.</p>
+    <div class="card text-center py-12">
+      <p class="text-5xl mb-4" aria-hidden="true">📖</p>
+      <p class="text-lg font-medium text-stone-900">No recipes yet</p>
+      <p class="mt-2 text-stone-600">Start your cookbook with your first recipe.</p>
+      <p class="mt-6"><%= link_to "Create a recipe", new_recipe_path, class: "btn-primary" %></p>
+    </div>
   <% end %>
 </div>
-
-<p><%= link_to "New recipe", new_recipe_path %></p>

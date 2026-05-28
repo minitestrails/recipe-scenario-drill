@@ -1,8 +1,10 @@
-<%= form_with(model: recipe) do |form| %>
+<%= form_with(model: recipe, class: "space-y-8") do |form| %>
   <% if recipe.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
-      <ul>
+    <div id="error_explanation" class="rounded-xl border border-red-200 bg-red-50 p-4" role="alert">
+      <h2 class="text-sm font-semibold text-red-900">
+        <%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:
+      </h2>
+      <ul class="mt-2 list-inside list-disc text-sm text-red-800">
         <% recipe.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -10,34 +12,20 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title %>
-    <%= form.text_field :title %>
-    <% recipe.errors.full_messages_for(:title).each do |message| %>
-      <div class="field-error"><%= message %></div>
-    <% end %>
+  <div class="card space-y-5">
+    <h2 class="text-lg font-semibold text-stone-900">Basics</h2>
+
+    <%= form_field form, :title %>
+    <%= form_field form, :description, type: :textarea, label: "Description" %>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <%= form_field form, :servings, type: :number_field, label: "Servings", min: 1 %>
+      <%= form_field form, :prep_time, type: :number_field, label: "Prep time (minutes)", min: 1 %>
+    </div>
   </div>
 
-  <div>
-    <%= form.label :description %>
-    <%= form.textarea :description %>
-  </div>
-
-  <div>
-    <%= form.label :servings %>
-    <%= form.number_field :servings, min: 1 %>
-  </div>
-
-  <div>
-    <%= form.label :prep_time, "Prep time (minutes)" %>
-    <%= form.number_field :prep_time, min: 1 %>
-    <% recipe.errors.full_messages_for(:prep_time).each do |message| %>
-      <div class="field-error"><%= message %></div>
-    <% end %>
-  </div>
-
-  <fieldset data-controller="nested-form">
-    <legend>Ingredients</legend>
+  <fieldset data-controller="nested-form" class="card space-y-4">
+    <legend class="text-lg font-semibold text-stone-900">Ingredients</legend>
 
     <template data-nested-form-target="template">
       <%= form.fields_for :ingredients, Ingredient.new, child_index: "NEW_RECORD" do |ingredient_fields| %>
@@ -45,17 +33,17 @@
       <% end %>
     </template>
 
-    <div data-nested-form-target="container">
+    <div data-nested-form-target="container" class="space-y-3">
       <%= form.fields_for :ingredients do |ingredient_fields| %>
         <%= render "ingredient_fields", form: ingredient_fields %>
       <% end %>
     </div>
 
-    <button type="button" data-action="nested-form#add">Add ingredient</button>
+    <button type="button" data-action="nested-form#add" class="btn-secondary">+ Add ingredient</button>
   </fieldset>
 
-  <fieldset data-controller="nested-form">
-    <legend>Steps</legend>
+  <fieldset data-controller="nested-form" class="card space-y-4">
+    <legend class="text-lg font-semibold text-stone-900">Steps</legend>
 
     <template data-nested-form-target="template">
       <%= form.fields_for :steps, Step.new, child_index: "NEW_RECORD" do |step_fields| %>
@@ -63,16 +51,17 @@
       <% end %>
     </template>
 
-    <div data-nested-form-target="container">
+    <div data-nested-form-target="container" class="space-y-3">
       <%= form.fields_for :steps do |step_fields| %>
         <%= render "step_fields", form: step_fields %>
       <% end %>
     </div>
 
-    <button type="button" data-action="nested-form#add">Add step</button>
+    <button type="button" data-action="nested-form#add" class="btn-secondary">+ Add step</button>
   </fieldset>
 
-  <div>
-    <%= form.submit %>
+  <div class="flex flex-wrap gap-3">
+    <%= form.submit class: "btn-primary" %>
+    <%= link_to "Cancel", recipe.persisted? ? recipe : recipes_path, class: "btn-secondary" %>
   </div>
 <% end %>

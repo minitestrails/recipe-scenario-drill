@@ -1,8 +1,10 @@
 <% content_for :title, "Edit #{@recipe.title}" %>
 
-<h1>Editing recipe</h1>
+<%= page_header "Editing recipe", "Update details, ingredients, and steps." %>
 
 <%= render "form", recipe: @recipe %>
 
-<%= link_to "Show this recipe", @recipe %> |
-<%= link_to "Back to recipes", recipes_path %>
+<div class="mt-6 flex flex-wrap gap-4 text-sm">
+  <%= link_to "View recipe", @recipe, class: "font-medium text-brand-700 hover:text-brand-800" %>
+  <%= link_to "← Back to recipes", recipes_path, class: "font-medium text-stone-600 hover:text-brand-700" %>
+</div>

@@ -1,16 +1,18 @@
 <div class="nested-fields">
   <%= form.hidden_field :_destroy, value: false, data: { nested_form_destroy: true } %>
 
-  <div>
-    <%= form.label :position, "Order" %>
-    <%= form.number_field :position, min: 1 %>
-  </div>
+  <div class="grid gap-4 sm:grid-cols-6">
+    <div class="sm:col-span-1">
+      <%= form.label :position, "Order", class: "form-label" %>
+      <%= form.number_field :position, min: 1, class: "form-input" %>
+    </div>
 
-  <div>
-    <%= form.label :instruction %>
-    <%= form.textarea :instruction %>
-    <% form.object.errors.full_messages_for(:instruction).each do |message| %>
-      <div class="field-error"><%= message %></div>
-    <% end %>
+    <div class="sm:col-span-5">
+      <%= form.label :instruction, class: "form-label" %>
+      <%= form.textarea :instruction, rows: 3, class: "form-textarea" %>
+      <% form.object.errors.full_messages_for(:instruction).each do |message| %>
+        <div class="field-error"><%= message %></div>
+      <% end %>
+    </div>
   </div>
 </div>

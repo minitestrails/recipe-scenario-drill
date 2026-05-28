@@ -1,63 +1,89 @@
 <% content_for :title, @recipe.title %>
 
-<h1><%= @recipe.title %></h1>
+<article class="space-y-8">
+  <header class="space-y-4">
+    <h1><%= @recipe.title %></h1>
 
-<% if @recipe.description.present? %>
-  <p><%= simple_format @recipe.description %></p>
-<% end %>
+    <% if @recipe.description.present? %>
+      <div class="prose prose-stone max-w-none text-stone-600 leading-relaxed">
+        <%= simple_format @recipe.description, class: "mb-0" %>
+      </div>
+    <% end %>
 
-<dl>
-  <% if @recipe.servings.present? %>
-    <dt>Servings</dt>
-    <dd><%= @recipe.servings %></dd>
-  <% end %>
-  <% if @recipe.prep_time.present? %>
-    <dt>Prep time</dt>
-    <dd><%= @recipe.prep_time %> minutes</dd>
-  <% end %>
-</dl>
+    <% if @recipe.servings.present? || @recipe.prep_time.present? %>
+      <dl class="flex flex-wrap gap-3">
+        <% if @recipe.servings.present? %>
+          <div class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm">
+            <dt class="sr-only">Servings</dt>
+            <dd><span aria-hidden="true">👥</span> <%= @recipe.servings %> servings</dd>
+          </div>
+        <% end %>
+        <% if @recipe.prep_time.present? %>
+          <div class="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm">
+            <dt class="sr-only">Prep time</dt>
+            <dd><span aria-hidden="true">⏱</span> <%= @recipe.prep_time %> min prep</dd>
+          </div>
+        <% end %>
+      </dl>
+    <% end %>
+  </header>
 
-<section id="ingredients">
-  <h2>Ingredients</h2>
-  <% if @recipe.ingredients.any? %>
-    <ul>
-      <% @recipe.ingredients.each do |ingredient| %>
-        <li><%= ingredient.quantity %> <%= ingredient.unit %> <%= ingredient.name %></li>
+  <div class="grid gap-6 lg:grid-cols-2">
+    <section id="ingredients" class="card">
+      <h2 class="mb-4 flex items-center gap-2">
+        <span aria-hidden="true">🥕</span> Ingredients
+      </h2>
+      <% if @recipe.ingredients.any? %>
+        <ul class="space-y-2">
+          <% @recipe.ingredients.each do |ingredient| %>
+            <li class="flex gap-2 rounded-lg bg-stone-50 px-3 py-2 text-stone-800">
+              <span class="font-medium text-brand-700"><%= ingredient.quantity %> <%= ingredient.unit %></span>
+              <span><%= ingredient.name %></span>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <p class="text-stone-500">No ingredients listed.</p>
       <% end %>
-    </ul>
-  <% else %>
-    <p>No ingredients listed.</p>
-  <% end %>
-</section>
+    </section>
 
-<section id="steps">
-  <h2>Steps</h2>
-  <% if @recipe.steps.ordered.any? %>
-    <ol>
-      <% @recipe.steps.ordered.each do |step| %>
-        <li><%= step.instruction %></li>
+    <section id="steps" class="card">
+      <h2 class="mb-4 flex items-center gap-2">
+        <span aria-hidden="true">👨‍🍳</span> Steps
+      </h2>
+      <% if @recipe.steps.ordered.any? %>
+        <ol class="space-y-3 list-none counter-reset-none">
+          <% @recipe.steps.ordered.each_with_index do |step, index| %>
+            <li class="flex gap-3">
+              <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-800"><%= index + 1 %></span>
+              <span class="pt-1 text-stone-700 leading-relaxed"><%= step.instruction %></span>
+            </li>
+          <% end %>
+        </ol>
+      <% else %>
+        <p class="text-stone-500">No steps listed.</p>
       <% end %>
-    </ol>
-  <% else %>
-    <p>No steps listed.</p>
-  <% end %>
-</section>
+    </section>
+  </div>
 
-<section id="share">
-  <h2>Share recipe</h2>
-  <%= form_with url: deliver_share_recipe_path(@recipe), method: :post do |form| %>
-    <div>
-      <%= form.label :recipient_email, "Friend's email" %>
-      <%= form.email_field :recipient_email, required: true, placeholder: "friend@example.com" %>
-    </div>
-    <%= form.submit "Email recipe" %>
-  <% end %>
-</section>
+  <section id="share" class="card border-brand-200/60 bg-gradient-to-br from-brand-50 to-white">
+    <h2 class="mb-1">Share recipe</h2>
+    <p class="mb-4 text-sm text-stone-600">Email this recipe to a friend (opens in letter_opener in development).</p>
 
-<div>
-  <% if @recipe.user_id.nil? || @recipe.user_id == Current.user&.id %>
-    <%= link_to "Edit this recipe", edit_recipe_path(@recipe) %> |
-    <%= button_to "Destroy this recipe", @recipe, method: :delete, form: { data: { turbo_confirm: "Are you sure?" } } %> |
-  <% end %>
-  <%= link_to "Back to recipes", recipes_path %>
-</div>
+    <%= form_with url: deliver_share_recipe_path(@recipe), method: :post, class: "flex flex-col gap-4 sm:flex-row sm:items-end" do |form| %>
+      <div class="min-w-0 flex-1 space-y-1">
+        <%= form.label :recipient_email, "Friend's email", class: "form-label" %>
+        <%= form.email_field :recipient_email, required: true, placeholder: "friend@example.com", class: "form-input" %>
+      </div>
+      <%= form.submit "Email recipe", class: "btn-primary shrink-0" %>
+    <% end %>
+  </section>
+
+  <div class="flex flex-wrap items-center gap-3 border-t border-stone-200 pt-6">
+    <% if @recipe.user_id.nil? || @recipe.user_id == Current.user&.id %>
+      <%= link_to "Edit", edit_recipe_path(@recipe), class: "btn-secondary" %>
+      <%= button_to "Delete", @recipe, method: :delete, class: "btn-danger", form: { data: { turbo_confirm: "Are you sure you want to delete this recipe?" } } %>
+    <% end %>
+    <%= link_to "← Back to recipes", recipes_path, class: "text-sm font-medium text-stone-600 hover:text-brand-700" %>
+  </div>
+</article>
