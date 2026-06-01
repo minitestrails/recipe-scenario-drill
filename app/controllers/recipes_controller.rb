@@ -1,5 +1,5 @@
 class RecipesController < ApplicationController
-  allow_unauthenticated_access only: %i[ index show new create deliver_share ]
+  allow_unauthenticated_access only: %i[ index show new create deliver_share edit update destroy ]
   before_action :set_recipe, only: %i[ show edit update destroy deliver_share ]
   before_action :authorize_recipe_owner!, only: %i[ edit update destroy ]
 
@@ -12,13 +12,9 @@ class RecipesController < ApplicationController
 
   def new
     @recipe = Recipe.new
-    @recipe.ingredients.build
-    @recipe.steps.build(position: 1)
   end
 
   def edit
-    @recipe.ingredients.build if @recipe.ingredients.empty?
-    @recipe.steps.build(position: (@recipe.steps.maximum(:position) || 0) + 1) if @recipe.steps.empty?
   end
 
   def create
@@ -63,6 +59,12 @@ class RecipesController < ApplicationController
     end
 
     def authorize_recipe_owner!
+      unless Current.session
+        session[:return_to_after_authenticating] = request.url
+        redirect_to new_session_path, alert: "Not authorized"
+        return
+      end
+
       return if @recipe.user_id.present? && @recipe.user_id == Current.user&.id
 
       redirect_to recipes_path, alert: "Not authorized"
